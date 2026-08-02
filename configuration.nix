@@ -14,6 +14,7 @@
     enable = true;
     device = "nodev";
     efiSupport = true;
+    gfxmodeEfi = "1920x1080";
   };
   boot.loader.efi = {
     canTouchEfiVariables = true;
@@ -21,6 +22,7 @@
   };
 
   boot.initrd.systemd.enable = true;
+  boot.initrd.kernelModules = [ "amdgpu" ];
   boot.plymouth = {
     enable = true;
   };
@@ -60,6 +62,10 @@
       name = "JetBrainsMono Nerd Font Mono";
       size = 16;
       package = pkgs.nerd-fonts.jetbrains-mono;
+    };
+    theme = {
+      name = "Colloid-Dark";
+      package = pkgs.colloid-gtk-theme;
     };
   };
 
