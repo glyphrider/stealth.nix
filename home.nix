@@ -130,6 +130,8 @@ in
     shellAliases = {
       "awsume" = ". awsume";
       "hyprland" = "uwsm start hyprland-uwsm.desktop";
+      "htop" = "nix shell nixpkgs#htop -c htop";
+      "emacs" = "nix shell nixpkgs#emacs-nox -c emacs";
     };
     syntaxHighlighting = {
       enable = true;
