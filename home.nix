@@ -4,6 +4,22 @@ let
   wallpaper = pkgs.runCommand "wallpaper-nix-nineish-catppuccin-macchiato" { } ''
     cp ${./wallpapers/nix-wallpaper-nineish-catppuccin-macchiato.png} $out
   '';
+
+  geProtonVersion = "11-5";
+  geProton = pkgs.stdenv.mkDerivation {
+    pname = "GE-Proton";
+    version = geProtonVersion;
+    src = pkgs.fetchurl {
+      url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${geProtonVersion}/GE-Proton${geProtonVersion}-x86_64.tar.gz";
+      sha256 = "0xcaqdfzjscyl02qi9ij2fhcallrfn24vi4nkfs7s11wbyrc8hyy";
+    };
+    dontConfigure = true;
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out
+      tar -xzf $src -C $out --strip-components=1
+    '';
+  };
 in
 {
   programs.git = {
@@ -83,6 +99,10 @@ in
         ublock-origin
       ];
     };
+  };
+
+  home.sessionVariables = {
+    EDITOR = "vim";
   };
 
   home.shell = {
@@ -594,6 +614,11 @@ in
 
   xdg.configFile."nvim" = {
     source = "${inputs.nvim-config}";
+    recursive = true;
+  };
+
+  home.file.".local/share/Steam/compatibilitytools.d/GE-Proton${geProtonVersion}-x86_64" = {
+    source = geProton;
     recursive = true;
   };
 
