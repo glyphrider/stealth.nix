@@ -317,20 +317,28 @@ in
         }
         {
           _args = [
-            "SUPER + F"
-            (lib.generators.mkLuaInline "hl.dsp.exec_cmd('firefox')")
-          ];
-        }
-        {
-          _args = [
-            "SUPER + X"
-            (lib.generators.mkLuaInline "hl.dsp.exec_cmd('firefox')")
-          ];
-        }
-        {
-          _args = [
             "SUPER + SHIFT + X"
             (lib.generators.mkLuaInline "hl.dsp.exit()")
+          ];
+        }
+        {
+          _args = [
+            "SUPER + V"
+            (lib.generators.mkLuaInline "hl.dsp.window.float({ action = 'toggle' })")
+          ];
+        }
+        {
+          _args = [
+            "SUPER + mouse:272"
+            (lib.generators.mkLuaInline "hl.dsp.window.drag()")
+            { mouse = true; }
+          ];
+        }
+        {
+          _args = [
+            "SUPER + mouse:273"
+            (lib.generators.mkLuaInline "hl.dsp.window.resize()")
+            { mouse = true; }
           ];
         }
 
@@ -382,6 +390,14 @@ in
       hl.window_rule({
         match = { class = "foot" },
         opacity = "0.75 0.75"
+      })
+      hl.window_rule({
+        match = { class = "^[Ss]team$" },
+        float = true
+      })
+      hl.window_rule({
+        match = { class = "^steam_app_[0-9]+$" },
+        float = true
       })
       for i = 1, 10 do
         local key = i % 10
