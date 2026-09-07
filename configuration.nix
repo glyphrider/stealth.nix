@@ -28,7 +28,7 @@
   };
   boot.kernelParams = [ "quiet" "splash" ];
 
-  networking.hostName = "nixie"; # Define your hostname.
+  networking.hostName = "stealth"; # Define your hostname.
 
   networking.networkmanager.enable = true;
 
