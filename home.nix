@@ -616,6 +616,11 @@ in
       monitor = DP-1
       path = ${wallpaper}
     }
+
+    wallpaper {
+      monitor = HDMI-A-1
+      path = ${wallpaper}
+    }
   '';
 
   xdg.mimeApps = {
@@ -634,10 +639,23 @@ in
     recursive = true;
   };
 
-  home.file.".local/share/Steam/compatibilitytools.d/GE-Proton${geProtonVersion}-x86_64" = {
-    source = geProton;
-    recursive = true;
-  };
+  # home.file with recursive=true symlinks every file individually (rather than
+  # one symlink for the whole tree), including files/share/default_pfx - the
+  # template wine-prefix Proton copies per-game. GE-Proton's copy_pfx() preserves
+  # symlinks verbatim, so the copied prefix ends up with .update-timestamp/*.reg
+  # pointing back into the read-only Nix store, and Proton crashes with EROFS
+  # trying to write a fresh timestamp through it. Copy the tree instead so it's
+  # real, writable files.
+  home.activation.installGEProton = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    geProtonDest="$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton${geProtonVersion}-x86_64"
+    if [ ! -e "$geProtonDest/.nix-source" ] || [ "$(cat "$geProtonDest/.nix-source" 2>/dev/null)" != "${geProton}" ]; then
+      $DRY_RUN_CMD rm -rf "$geProtonDest"
+      $DRY_RUN_CMD mkdir -p "$geProtonDest"
+      $DRY_RUN_CMD cp -r --preserve=mode --no-preserve=ownership "${geProton}/." "$geProtonDest/"
+      $DRY_RUN_CMD chmod -R u+w "$geProtonDest"
+      $DRY_RUN_CMD echo -n "${geProton}" > "$geProtonDest/.nix-source"
+    fi
+  '';
 
   home.stateVersion = "25.11";
 }
