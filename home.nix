@@ -150,7 +150,6 @@ in
       share = true;
     };
     shellAliases = {
-      "awsume" = ". awsume";
       "hyprland" = "uwsm start hyprland-uwsm.desktop";
       "htop" = "nix run nixpkgs#htop";
       "emacs" = "nix run nixpkgs#emacs-nox";
