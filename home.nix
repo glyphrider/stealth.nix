@@ -28,6 +28,10 @@ in
       user = {
         name = "Brian H. Ward";
         email = "glyphrider@gmail.com";
+        signingkey = "C080C200A93516B45B690469A1268F7E5E7EBFDF";
+      };
+      commit = {
+        gpgsign = true;
       };
     };
   };
