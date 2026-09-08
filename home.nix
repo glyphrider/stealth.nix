@@ -55,8 +55,6 @@ in
     neovim
     gcc
     unzip
-    stow
-    afetch
     fastfetch
     minicom
     grim
@@ -154,9 +152,11 @@ in
     shellAliases = {
       "awsume" = ". awsume";
       "hyprland" = "uwsm start hyprland-uwsm.desktop";
-      "htop" = "nix shell nixpkgs#htop -c htop";
-      "emacs" = "nix shell nixpkgs#emacs-nox -c emacs";
-      "fetch" = "nix shell nixpkgs#fetch -c fetch";
+      "htop" = "nix run nixpkgs#htop";
+      "emacs" = "nix run nixpkgs#emacs-nox";
+      "fetch" = "nix run nixpkgs#fetch";
+      "afetch" = "nix run nixpkgs#afetch";
+      "nvtop" = "nix run nixpkgs#nvtopPackages.amd";
     };
     syntaxHighlighting = {
       enable = true;
