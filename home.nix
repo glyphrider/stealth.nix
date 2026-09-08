@@ -613,7 +613,7 @@ in
     splash = false
 
     wallpaper {
-      monitor = eDP-1
+      monitor = DP-1
       path = ${wallpaper}
     }
   '';
