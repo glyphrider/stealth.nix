@@ -402,6 +402,15 @@ in
         match = { class = "^steam_app_[0-9]+$" },
         float = true
       })
+      -- Proton/Steam games often just resize themselves to the monitor
+      -- resolution instead of requesting real compositor fullscreen, so
+      -- waybar (a top-layer surface) still draws over the top of them.
+      -- Forcing real fullscreen makes Hyprland hide top-layer surfaces
+      -- like waybar behind the game as expected.
+      hl.window_rule({
+        match = { class = "^steam_app_[0-9]+$" },
+        fullscreen = true
+      })
       for i = 1, 10 do
         local key = i % 10
         hl.bind("SUPER + ".. key, hl.dsp.focus({workspace = i}))
