@@ -15,6 +15,10 @@
       flake = false;
     };
     nur.url = "github:nix-community/NUR";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -25,6 +29,7 @@
       hyprland,
       hyprpaper,
       nur,
+      disko,
       ...
     }@inputs:
     {
@@ -32,6 +37,8 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
+          disko.nixosModules.disko
+          ./disk-config.nix
           ./configuration.nix
           { nixpkgs.overlays = [ nur.overlays.default ]; }
           home-manager.nixosModules.default
