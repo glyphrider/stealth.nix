@@ -344,6 +344,20 @@ in
             { mouse = true; }
           ];
         }
+        {
+          _args = [
+            "Print"
+            (lib.generators.mkLuaInline
+              "hl.dsp.exec_cmd('mkdir -p ~/Pictures/screenshots && grim ~/Pictures/screenshots/$(date +%Y%m%d-%H%M%S).png')")
+          ];
+        }
+        {
+          _args = [
+            "SUPER + SHIFT + S"
+            (lib.generators.mkLuaInline
+              ''hl.dsp.exec_cmd('mkdir -p ~/Pictures/screenshots && grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y%m%d-%H%M%S).png')'')
+          ];
+        }
 
 #        "mod + Return, exec, kitty"
 #        "mod + R, exec, fuzzel"
@@ -356,8 +370,6 @@ in
 #        ",  XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
 #        ",  XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
 #        ",  XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-#        ", Print, exec, grim ~/Pictures/screenshots/$(date +%Y%m%d-%H%M%S).png"
-#        ''mod SHIFT, S, exec, grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y%m%d-%H%M%S).png''
 #        "mod CONTROL, XF86TouchpadToggle, exec, toggle-touchpad"
       ];
     };
