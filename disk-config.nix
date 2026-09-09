@@ -32,9 +32,6 @@
                   "@home" = {
                     mountpoint = "/home";
                   };
-                  "@nix" = {
-                    mountpoint = "/nix";
-                  };
                 };
               };
             };
