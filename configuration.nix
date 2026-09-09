@@ -3,6 +3,28 @@
 
 { config, lib, pkgs, inputs, ... }:
 
+let
+  # NFS shares exported by the NAS, automounted on first access and
+  # unmounted after being idle so boot/login never blocks on the NAS
+  # being reachable. The NAS only exports NFSv3 (confirmed via
+  # `rpcinfo -p`; NFSv4 mounts fail with "Protocol not supported").
+  nasMount = remotePath: {
+    device = "192.168.1.4:${remotePath}";
+    fsType = "nfs";
+    options = [
+      "x-systemd.automount"
+      "noauto"
+      "x-systemd.idle-timeout=600"
+      "x-systemd.mount-timeout=10s"
+      "soft"
+      "timeo=100"
+      "retry=2"
+      "nfsvers=3"
+      "proto=tcp"
+      "_netdev"
+    ];
+  };
+in
 { imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix ];
@@ -149,6 +171,11 @@
   };
 
   services.openssh.enable = true;
+
+  fileSystems."/media/movies" = nasMount "/mnt/tank/media/movies";
+  fileSystems."/media/shows" = nasMount "/mnt/tank/media/shows";
+  fileSystems."/media/music" = nasMount "/mnt/tank/media/music";
+  fileSystems."/archive" = nasMount "/mnt/tank/archive";
 
   system.stateVersion = "25.11"; # Did you read the comment?
 
