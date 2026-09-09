@@ -45,6 +45,31 @@
   };
   services.blueman.enable = true;
 
+  # Auto-reconnect the Edifier bluetooth speakers on boot. BlueZ powers the
+  # adapter on (powerOnBoot above) but does not itself reconnect previously
+  # paired devices, so retry a connect for a bit until the speakers are up.
+  systemd.services.edifier-bluetooth-autoconnect = {
+    description = "Auto-connect Edifier bluetooth speakers";
+    after = [ "bluetooth.service" ];
+    requires = [ "bluetooth.service" ];
+    wantedBy = [ "bluetooth.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "edifier-bluetooth-connect" ''
+        set -eu
+        mac=64:68:76:70:F3:FE
+        for i in $(seq 1 30); do
+          if ${pkgs.bluez}/bin/bluetoothctl info "$mac" | grep -q "Connected: yes"; then
+            exit 0
+          fi
+          ${pkgs.bluez}/bin/bluetoothctl connect "$mac" && exit 0
+          sleep 2
+        done
+        exit 1
+      '';
+    };
+  };
+
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   services.ollama = {
