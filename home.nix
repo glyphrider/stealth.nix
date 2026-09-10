@@ -47,6 +47,7 @@ in
   };
 
   home.packages = with pkgs; [
+    cmus
     brightnessctl
     fuzzel
     tofi
@@ -419,9 +420,30 @@ in
       -- waybar (a top-layer surface) still draws over the top of them.
       -- Forcing real fullscreen makes Hyprland hide top-layer surfaces
       -- like waybar behind the game as expected.
+      -- steam_app_8500 covers EVE Launcher, a titleless Steam helper
+      -- window, and the actual EVE game client, so match the game's
+      -- exact title rather than fighting the other two with excludes.
       hl.window_rule({
-        match = { class = "^steam_app_[0-9]+$" },
+        match = { class = "^steam_app_8500$", title = "^EVE$" },
         fullscreen = true
+      })
+      -- EVE Launcher itself requests a window the size of the whole
+      -- monitor on open, so give it a sane floating size instead.
+      -- (window_w/window_h in `move` reflect the pre-rule size, not
+      -- the `size` set just above, so use literal offsets here.)
+      hl.window_rule({
+        match = { class = "^steam_app_8500$", title = "^EVE Launcher$" },
+        size = "1600 1000",
+        move = "(monitor_w/2)-800 (monitor_h/2)-500"
+      })
+      -- The negative-title rule above only stops *us* from forcing
+      -- fullscreen at window open. EVE Launcher separately asks the
+      -- compositor to go fullscreen itself a moment after opening
+      -- (that's the delayed "blow up" behavior) -- suppress_event
+      -- blocks that self-requested fullscreen event specifically.
+      hl.window_rule({
+        match = { class = "^steam_app_8500$" },
+        suppress_event = "fullscreen"
       })
       for i = 1, 10 do
         local key = i % 10
