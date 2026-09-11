@@ -415,6 +415,14 @@ in
         match = { class = "^steam_app_[0-9]+$" },
         float = true
       })
+      -- Bitwarden's "unlock vault" prompt opens as a separate Chrome
+      -- extension window (class chrome-<extension-id>-Default) rather
+      -- than a popup layer, so Hyprland tiles it like a normal window
+      -- unless told otherwise.
+      hl.window_rule({
+        match = { class = "^chrome-nngceckbapebfimnlniiiahkandclblb-Default$" },
+        float = true
+      })
       -- Proton/Steam games often just resize themselves to the monitor
       -- resolution instead of requesting real compositor fullscreen, so
       -- waybar (a top-layer surface) still draws over the top of them.
